@@ -45,11 +45,54 @@ sudo apt-get update
 sudo apt-get install portaudio19-dev python-dev ffmpeg
 ```
 
+### For Windows
+
+Use PowerShell or Command Prompt:
+Install uv via PowerShell (one-time)
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+Install dependencies via Chocolatey (install Chocolatey first if needed)
+choco install portaudio ffmpeg
+
+Note: Ensure Python 3.10+ is installed. If using WSL (recommended for ROS2), follow Linux steps inside WSL.
+
+
 ### Obtain an OpenMind API Key
 
-Obtain your API Key at [OpenMind Portal](https://portal.openmind.org/). Copy it to `config/spot.json5`, replacing the `openmind_free` placeholder. Or, `cp env.example .env` and add your key to the `.env`. 
+### Configuration Example
+
+Edit `config/spot.json5` (or copy from `config/spot.example.json5` if available). Here's a basic template:
+
+```json5
+{
+  openmind: {
+    api_key: "your_openmind_free_key_here",  // From https://portal.openmind.org/
+  },
+  llm: {
+    model: "gpt-4o",
+    endpoint: "https://api.openai.com/v1/chat/completions",
+  },
+  inputs: [
+    { type: "webcam", device: 0 },  // Default camera
+  ],
+  actions: [
+    { type: "speech", tts: "elevenlabs" },
+    { type: "move", connector: "simulated" },  // For testing without hardware
+  ],
+}
+
+Customize system_prompt in the file to change agent behavior, e.g., "You are a helpful robot assistant focused on object recognition."
 
 ### Launching OM1
+
+### Troubleshooting
+
+- **PortAudio/FFmpeg Error**: Ensure dependencies are installed. On Mac/Linux, run `brew list portaudio` or `apt list --installed | grep portaudio`. Restart terminal.
+- **API Key Invalid**: Double-check at [OpenMind Portal](https://portal.openmind.org/). Use `.env` for secrets: `echo "OM_API_KEY=your_key" >> .env`.
+- **WebSim Not Loading**: Check `http://localhost:8000/`; ensure no firewall blocks port 8000. Run `uv run src/run.py spot --debug` for logs.
+- **No Webcam Detected**: List devices with `python -c "import cv2; print(cv2.VideoCapture(0).isOpened())"`.
+- **Testing Without Hardware**: Use `simulated` connector in config for mock actions.
+
+If issues persist, join [Discord](https://discord.gg/VUjpg4ef5n) or open an issue with logs.
 
 Run
 ```bash
