@@ -9,7 +9,6 @@ Thanks for your interest! We welcome all contributions, especially docs to make 
 4. Commit: `git commit -m "Add Windows install guide and config example"`.
 5. Push and open PR to `main`. Use template below.
 
-
 ## PR Template
 - **Description**: What/Why?
 - **Changes**: List files.
